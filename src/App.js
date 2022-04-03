@@ -1,24 +1,41 @@
-import logo from './logo.svg';
 import './App.css';
+import React,{useState,useEffect,createContext} from 'react'
+import Login from './components/Login';
+import Home from './components/Admin/Home'
+import {BrowserRouter as Router,Routes,Route,Navigate  } from 'react-router-dom'
+import { ReactSession } from 'react-client-session'
+import jwt_decode from "jwt-decode"
 
 function App() {
+  ReactSession.setStoreType("localStorage");
+  const AuthorizationContext  = createContext();
+  const [user, setUser] = useState({name:undefined,rol:undefined,token:undefined})
+
+  useEffect(() => {
+    const token = ReactSession.get('token')
+    if(token){
+      const infoSesion  = jwt_decode(ReactSession.get('token'));
+      const {name,rol} = infoSesion.session;
+      setUser({name,rol,token})
+    }
+  }, [])
+
+  const setLoginParams = (e)=>{
+    const token = ReactSession.get('token')
+    if(token){
+      const infoSesion  = jwt_decode(ReactSession.get('token'));
+      const {name,rol} = infoSesion.session;
+      setUser({name,rol,token})
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path="/login" element={user.token ? <Navigate  to='/' /> : <Login login={setLoginParams}/> }/>
+        <Route exact path="/" element={user.token ? <Home user={user} /> : <Navigate  to='/login' />}/>
+      </Routes>
+    </Router>
   );
 }
 

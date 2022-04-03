@@ -1,38 +1,94 @@
-.App {
+*{
+  margin: 0px;
+  padding:0px;
+  box-sizing: border-box;
+  font-family: Helvetica, Sans-Serif;
+}
+
+.container-login{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 1000;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.container-login img{
+  width: 100px;
+  height: 100px;
+}
+
+.login-header{
+  font-size: 30px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.login-body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 400px;
+  padding: 30px 50px;
+  border: solid 1px black;
+  border-radius: 20px;
+  box-shadow: 10px 5px 20px black;
+  background-color: white;
+}
+
+.login-body *{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.login-body header{
+  margin-bottom: 20px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.login-body input{
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: solid gray 1px;
+  background-color: #F0F8FF;
+  margin-bottom: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.btn-submit{
+  text-align: center;
+  width: auto;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #140D4F;
   color: white;
+  padding: 10px 20px;
+  border: none;
+  margin: 0 auto;
 }
 
-.App-link {
-  color: #61dafb;
+.btn-submit:hover{
+  opacity: 0.8;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.alert-warning{
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  color: white;
+  background-color: red;
+  text-align: center;
+  opacity: 0.8;
+  border-radius: 5px;
+}
+
+#tsparticles{
+  position: absolute;
 }
