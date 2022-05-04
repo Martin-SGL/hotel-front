@@ -1,0 +1,118 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+:root{
+    --sidebar-color:#4b5563;
+    --sidebar-text:white;
+    --header-color:white;
+}
+
+.container{
+    /* width: 100vw;
+    height: 100vh; */
+    /* display: grid;
+    grid-template-columns: 300px 1fr;*/
+    transition: transform ease-in-out; 
+}
+
+.main-body{ 
+    position: relative;
+    left: 300px;
+    transition: transform 1s ease-in-out;
+    width: calc(100vw - 300px);
+    min-height: calc(100vh);
+    display: flex;
+    flex-direction: column;
+}
+
+.main-section{
+    flex-grow: 1;
+    margin: 20px
+}
+
+.main-body footer{
+    flex-grow: 0 ;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: black;
+    height: 40px;
+    
+}
+
+.top-header{
+    height: 50px;
+    background-color: var(--main-color);
+    border-bottom: solid 1px black;
+    box-shadow: 0px 5px 5px 1px var(--sidebar-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info-user{
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+.user-icon-box{
+    position: absolute;
+    right: 10px;
+}
+
+nav.sidemenu{
+   position: fixed;
+   width: 300px;
+   top: 0px;
+   bottom: 0px;
+   background-color: var(--sidebar-color);
+   border-right: solid 2px black;
+   color: var(--sidebar-text);
+   padding: 0 20px;
+   transition: transform 1s ease-in-out;
+}
+
+nav.sidemenu header{
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: solid 1px white;
+}
+
+nav.sidemenu .side-body{
+    position: absolute;
+}
+
+nav.sidemenu .side-body h3{
+    margin-top: 20px;
+}
+
+nav.sidemenu div ol {
+    list-style: none;
+}
+
+nav.sidemenu div ol li{
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    
+}
+
+.side-body ol li span a{
+    text-decoration: none;
+}
+
+.side-body ol li span{
+    margin-left: 15px;
+}
+

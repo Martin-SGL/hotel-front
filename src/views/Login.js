@@ -1,10 +1,11 @@
 import React,{useState} from 'react'
 import { useNavigate } from "react-router-dom"
 import axios from 'axios'
+import Loader from '../assets/loader/Loader';
 import img from '../assets/img/hotel.png';
-import ParticlesLoign from './ParticlesLogin';
+import ParticlesLoign from '../components/ParticlesLogin';
 import { ReactSession } from 'react-client-session';
-import Loader from './Loader';
+
 
 
 const Login = (props) => {
@@ -21,9 +22,7 @@ const Login = (props) => {
             const url = 'http://localhost:9000/api/v1/login/'
             //mostar lodaer
             setDispLoader('flex')
-            console.log(data_user)
             let {data} = await axios.post(url,data_user)
-            console.log(data)
             if(data.token){
                 ReactSession.set('token',data.token)
                 return props.login()

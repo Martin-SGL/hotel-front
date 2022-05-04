@@ -1,14 +1,15 @@
 import './App.css';
 import React,{useState,useEffect,createContext} from 'react'
-import Login from './components/Login';
-import Home from './components/Admin/Home'
+import Login from './views/Login'
 import {BrowserRouter as Router,Routes,Route,Navigate  } from 'react-router-dom'
 import { ReactSession } from 'react-client-session'
 import jwt_decode from "jwt-decode"
+import Home from './views/home/Home';
+import Admin from './views/admin/layout/Admin';
+import ErrorURL from './views/ErrorURL'
 
 function App() {
   ReactSession.setStoreType("localStorage");
-  const AuthorizationContext  = createContext();
   const [user, setUser] = useState({name:undefined,rol:undefined,token:undefined})
 
   useEffect(() => {
@@ -25,6 +26,7 @@ function App() {
     if(token){
       const infoSesion  = jwt_decode(ReactSession.get('token'));
       const {name,rol} = infoSesion.session;
+      console.log(token)
       setUser({name,rol,token})
     }
   }
@@ -32,11 +34,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/login" element={user.token ? <Navigate  to='/' /> : <Login login={setLoginParams}/> }/>
-        <Route exact path="/" element={user.token ? <Home user={user} /> : <Navigate  to='/login' />}/>
+        <Route path='*' element={<ErrorURL/>} />
+        <Route exact path="/" element={ <Home/> }/>
+        <Route exact path="/login" element={user.token ? <Navigate  to='/admin/dashboard' /> : <Login login={setLoginParams}/> }/>
+        {/* Reservation routes */}
+        <Route exact path="/admin/*" element={user.token ? <Admin user={user} /> : <Navigate  to='/login' />}/>
       </Routes>
     </Router>
-  );
+  ) 
 }
 
 export default App;

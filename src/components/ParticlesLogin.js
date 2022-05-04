@@ -11,7 +11,7 @@ const ParticlesLoign = (porps) => {
                         value: "#140D4F",
                     },
                     },
-                    fpsLimit: 120,
+                    fpsLimit: 30,
                     interactivity: {
                     events: {
                         onHover: {
