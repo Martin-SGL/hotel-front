@@ -14,7 +14,7 @@ const Admin = ({user}) => {
     const [menu, setMenu] = useState(true)
 
     const sesionClose = (e)=>{
-        localStorage.removeItem('__react_session__');
+        localStorage.removeItem('token');
         window.location.reload()
     }
     

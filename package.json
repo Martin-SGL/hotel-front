@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
     "classnames": "^2.3.1",
+    "formik": "^2.2.9",
     "jwt-decode": "^3.1.2",
     "react": "^17.0.2",
     "react-client-session": "0.0.8",
@@ -18,7 +19,8 @@
     "react-scripts": "5.0.0",
     "react-toastify": "^9.0.0",
     "react-tsparticles": "^1.42.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

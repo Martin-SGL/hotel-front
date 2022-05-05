@@ -5,6 +5,7 @@ import Loader from '../assets/loader/Loader';
 import img from '../assets/img/hotel.png';
 import ParticlesLoign from '../components/ParticlesLogin';
 import { ReactSession } from 'react-client-session';
+import url_base from '../config/env'
 
 
 
@@ -19,12 +20,12 @@ const Login = (props) => {
         try{
             e.preventDefault()
             const data_user = {email,pass}
-            const url = 'http://localhost:9000/api/v1/login/'
+            const url = `${url_base}login/`
             //mostar lodaer
             setDispLoader('flex')
             let {data} = await axios.post(url,data_user)
             if(data.token){
-                ReactSession.set('token',data.token)
+                localStorage.setItem('token',data.token)
                 return props.login()
             }else{
                 setRes(data)
