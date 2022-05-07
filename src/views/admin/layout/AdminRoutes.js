@@ -11,11 +11,7 @@ import Employee from '../employee/Employee'
 import Room from '../room/Room'
 import Category from '../categories/Category'
 
-
-export const UserContext = React.createContext();
-
 function AdminRoutes() {
-    const [routes, setRoutes] = useState()
   return (
         <Routes>
           <Route exact path="/dashboard" element={<Dashboard/>}/>
