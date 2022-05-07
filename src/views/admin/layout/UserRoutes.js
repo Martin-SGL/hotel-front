@@ -9,6 +9,7 @@ import People from '@material-ui/icons/People';
 import SingleBedIcon from '@material-ui/icons/SingleBed';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import AccessibilityIcon from '@material-ui/icons/Accessibility';
+import CategoryIcon from '@material-ui/icons/Category';
 
 export const receptionist = {
     operations:
@@ -115,21 +116,21 @@ export const manager = {
         },
         {
             id: 21,
-            nameRoute:"Rooms",
-            route:"/admin/rooms-c",
-            icon: <SingleBedIcon/>
-        },
-        {
-            id: 22,
             nameRoute:"Services",
             route:"/admin/services-c",
             icon: <MenuBookIcon/>
         },
         {
-            id:23,
-            nameRoute: "Amenities",
-            route: "/admin/amenities-c",
-            icon: <AccessibilityIcon/>
+            id: 22,
+            nameRoute:"Rooms",
+            route:"/admin/rooms-c",
+            icon: <SingleBedIcon/>
+        },
+        {
+            id: 23,
+            nameRoute:"Categories",
+            route:"/admin/categories-c",
+            icon: <CategoryIcon/>
         },
     ],
 }

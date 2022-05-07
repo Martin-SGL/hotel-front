@@ -8,7 +8,6 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import Fab from '@material-ui/core/Fab'
-import { ReactSession } from 'react-client-session';
 
 //alerts toastify
 import { ToastContainer, toast } from 'react-toastify';
@@ -30,8 +29,7 @@ import url_base from '../../../config/env'
 import { getDefaultNormalizer } from '@testing-library/react'
 
 //Modal
-import ModalEmployee from './ModalEmployee';
-import { UserContext } from '../layout/AdminRoutes'
+import ModalEmployee from './ModalEmployee'
 import Alert_Dialog from '../../../components/Alert_Dialog'
 
 let initialForm = {
@@ -130,7 +128,6 @@ const Employee = () => {
         data = await axios.post(url_1,info,config)
         toast.success('Employee created')
       }else{
-        console.log(form.id)
         data = await axios.put(`${url_1}${form.id}`,info,config)
         toast.success('Employee updated')
       }
@@ -176,17 +173,15 @@ const Employee = () => {
       setLoader('flex')
       let data = await axios.delete(`${url_1}${employeeD.id}`,config)
       toast.success('Employee deleted')
-      if(data.status==='rejected'){
-        if(data.reason.response.status===450){
-          localStorage.removeItem('token');
-          window.location.reload()
-        }
-      }
       handleReset()
     }catch(error){
       if(error.response.status!==200){
         if(error.response.status===400){
-          toast.error('Server error')
+          if(error.response.data.message.includes('SequelizeUniqueConstraintError')){
+            toast.error('invalid email')
+          }else{
+            toast.error('Server error')
+          }
         }else if(error.response.status===403){
            toast.error('Validation error')
         }else if(error.response.status===404){

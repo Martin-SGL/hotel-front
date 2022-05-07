@@ -9,7 +9,7 @@ import Charges from '../charges/Charges'
 import Service from '../service/Service'
 import Employee from '../employee/Employee'
 import Room from '../room/Room'
-import Amenitie from '../amenitie/Amenitie'
+import Category from '../categories/Category'
 
 
 export const UserContext = React.createContext();
@@ -29,7 +29,7 @@ function AdminRoutes() {
           <Route exact path="/employees-c" element={<Employee/>}/>
           <Route exact path="/rooms-c" element={<Room/>}/>
           <Route exact path="/services-c" element={<Service/>}/>
-          <Route exact path="/amenities-c" element={<Amenitie/>}/>
+          <Route exact path="/categories-c" element={<Category/>}/>
       </Routes>
   )
 }
