@@ -38,6 +38,7 @@ let initialForm = {
   name:'',
   price:'',
   max:'',
+  description:'',
   id:null
 }
 
@@ -212,6 +213,7 @@ const Category = () => {
               <TableCell>Category</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>Max people</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -228,6 +230,7 @@ const Category = () => {
                 
                 <TableCell>{cg.price}</TableCell>
                 <TableCell>{cg.max}</TableCell>
+                <TableCell style={{maxWidth:'250px'}}>{cg.description}</TableCell>
                 <TableCell>
                   <IconButton aria-label="edit" size="small" onClick={(e) => editData(cg.id)}>
                     <EditIcon size="small" />

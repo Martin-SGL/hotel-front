@@ -110,6 +110,19 @@ const ModalRoom = ({ action, handleClose, setLoader, open ,categories,handleForm
                     helperText={formik.touched.max && formik.errors.max}
                     onBlur = {formik.handleBlur}
                 />
+                <TextField 
+                    id="description" 
+                    name='description' 
+                    label="Description" 
+                    fullWidth  
+                    margin="dense" 
+                    variant="outlined" 
+                    value={formik.values.description} 
+                    onChange={formik.handleChange} 
+                    error={formik.touched.description && Boolean(formik.errors.description)}
+                    helperText={formik.touched.description && formik.errors.description}
+                    onBlur = {formik.handleBlur}
+                />
                 <Grid>
                     <Fab onClick={formik.handleSubmit} color="primary" aria-label="add" size="small" style={{float:'right',marginTop:'20px',marginRight:'10px'}}>
                         <SaveIcon />

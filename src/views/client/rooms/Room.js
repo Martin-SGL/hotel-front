@@ -71,9 +71,7 @@ const Room = () => {
               <div className="description">
                 <h5>Description</h5>
                 <p>
-                  A room assigned to one person. May have one or more beds. The
-                  room size or area of Single Rooms are generally between 37 m²
-                  to 45 m²
+                  {cg.description}
                 </p>
               </div>
             </div>

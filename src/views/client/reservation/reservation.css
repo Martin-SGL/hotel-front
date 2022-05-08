@@ -1,0 +1,39 @@
+.container-reservation{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100vh;
+    min-height: calc(100vh - 100px);
+    justify-content: center;
+    align-items: center;
+}
+
+.body-reservation{
+    width: 500px;
+    border: solid 1px #cecece;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 10px 5px 5px #cecece;
+
+}
+
+.title-reservation{
+    margin-top: 20px;
+    font-size: 20px;
+    font-style: italic;
+
+}
+
+.modal-body{
+    margin-top: 10px;
+}
+
+.modal-body li{
+    margin-left: 30px;
+    margin-top: 2px;
+}
+
+.modal-body-error{
+    margin: 10px;
+}

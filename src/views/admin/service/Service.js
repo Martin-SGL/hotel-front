@@ -134,13 +134,6 @@ const Service = () => {
       }
       handleReset()
       
-      if(data.status==='rejected'){
-        if(data.reason.response.status===450){
-          localStorage.removeItem('token');
-          window.location.reload()
-        }
-      }
-      
     }catch(error){
       if(error.response.status!==200){
         if(error.response.status===400){
