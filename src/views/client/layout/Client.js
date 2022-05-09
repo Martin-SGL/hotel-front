@@ -73,12 +73,12 @@ const Client = (props) => {
             ?
             <Link to={`/hotel/reservation`} style={{backgroundColor:'#cecece',color:'white'}}>
               <div><i className="fa-solid fa-book-open"></i></div>
-              <span>&nbsp;Booking</span>
+              <span>&nbsp;Reservation</span>
             </Link>
             :
             <Link to={`/hotel/reservation`} onClick={e=>{setPath(window.location.pathname)}}>
               <div><i className="fa-solid fa-book-open"></i></div>
-              <span>&nbsp;Booking</span>
+              <span>&nbsp;Reservation</span>
             </Link>
           }
           </li>

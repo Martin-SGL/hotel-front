@@ -7,8 +7,7 @@ import Modal from '@material-ui/core/Modal'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
+
 
 //Icons
 import Fab from '@material-ui/core/Fab'
@@ -464,7 +463,7 @@ const formik = useFormik({
         >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-              Booking information
+              Reservation information
           </Typography>
             <div className="modal-body">
               <ul>

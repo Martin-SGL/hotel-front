@@ -66,7 +66,14 @@ const Login = (props) => {
                     </form>
                 </div>
                 <div>
-                    {res && res.data===null && <div className='alert-warning'>{error}</div>}
+                    {res && res.data===null && <div className='alert-warning'>
+                        <div>
+                            <i className="fa-solid fa-triangle-exclamation"/>
+                        </div>
+                        <div>
+                            {error}
+                        </div>
+                    </div>}
                 </div>
             </div>
         </div>

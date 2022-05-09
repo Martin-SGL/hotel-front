@@ -33,25 +33,7 @@ export const receptionist = {
                 icon: <AttachMoneyIcon/>
             },
             {
-                id: 4,
-                nameRoute:"Services",
-                route:"/admin/services",
-                icon: <RoomServiceIcon/>
-            },
-            {
-                id:5,
-                nameRoute:"Changes",
-                route:"/admin/changes",
-                icon: <TrendingFlatIcon/>
-            },
-            {
-                id:6,
-                nameRoute: "Charges",
-                route: "/admin/charges",
-                icon: <MoneyOffIcon/>
-            },
-            {
-                id:7,
+                id:4,
                 nameRoute:"Anomalies",
                 route: "/admin/anomalies",
                 icon: <ThumbDownAltIcon/>
@@ -82,25 +64,7 @@ export const manager = {
                 icon: <AttachMoneyIcon/>
             },
             {
-                id: 4,
-                nameRoute:"Services",
-                route:"/admin/services",
-                icon: <RoomServiceIcon/>
-            },
-            {
-                id:5,
-                nameRoute:"Changes",
-                route:"/admin/changes",
-                icon: <TrendingFlatIcon/>
-            },
-            {
-                id:6,
-                nameRoute: "Charges",
-                route: "/admin/charges",
-                icon: <MoneyOffIcon/>
-            },
-            {
-                id:7,
+                id:4,
                 nameRoute:"Anomalies",
                 route: "/admin/anomalies",
                 icon: <ThumbDownAltIcon/>
@@ -118,16 +82,22 @@ export const manager = {
             id: 21,
             nameRoute:"Services",
             route:"/admin/services-c",
-            icon: <MenuBookIcon/>
+            icon: <RoomServiceIcon/>
         },
         {
             id: 22,
+            nameRoute:"Restaurant",
+            route:"/admin/restaurant-c",
+            icon: <MenuBookIcon/>
+        },
+        {
+            id: 23,
             nameRoute:"Rooms",
             route:"/admin/rooms-c",
             icon: <SingleBedIcon/>
         },
         {
-            id: 23,
+            id: 24,
             nameRoute:"Categories",
             route:"/admin/categories-c",
             icon: <CategoryIcon/>

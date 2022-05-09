@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import Fab from '@material-ui/core/Fab'
 
+
 //alerts toastify
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,48 +21,39 @@ import Loader from '../../../assets/loader/Loader'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
-import ImageSearchIcon from '@material-ui/icons/ImageSearch';
 
 //axios
 import axios from 'axios'
 
 //url base
 import url_base from '../../../config/env'
-import { getDefaultNormalizer } from '@testing-library/react'
 
 //Modal
-import ModalCategory from './ModalCategory'
-import ModalImage from './ModalImage'
+import ModalRestaurant from './ModalRestaurant';
 import Alert_Dialog from '../../../components/Alert_Dialog'
 
 let initialForm = {
   name:'',
-  price:'',
-  max:'',
   description:'',
+  price:'',
   id:null
 }
 
 //informacion de urls
-const url_1 = `${url_base}categories/`
-const url_2 = `${url_base}images/`
-
+const url_1 = `${url_base}restaurants/`
 let config = {}
 
-const Category = () => {
+const Restaurant = () => {
   //states
   const [form,setForm] = useState(initialForm)
-  const [categories,setCategories] = useState([])
+  const [services,setServices] = useState([])
 
   //modal state vars
   const [open, setOpen] = useState(false)
   const [openD, setOpenD] = useState(false)
-  const [openI, setOpenI] = useState(false)
-  const [categoryD, setCategoryD] = useState(initialForm)
+  const [serviceD, setServiceD] = useState(initialForm)
   const handleOpenD = () => setOpenD(true)
   const handleCloseD = () => setOpenD(false)
-  const handleOpenI = () => setOpenI(true)
-  const handleCloseI = () => setOpenI(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   //loading state
@@ -74,6 +66,7 @@ const Category = () => {
   const notifyE = (message) => toast.error(message)
 
   const handleForm = async (e)=>{
+    console.log(e.target.name)
     setForm({
       ...form,[e.target.name]:e.target.value
     })
@@ -95,14 +88,15 @@ const Category = () => {
         config.headers =  { Authorization: `Bearer ${localStorage.getItem('token')}` }
         //mostar lodaer
         setLoader('flex')
-        let [data] = await Promise.allSettled([axios.get(url_1,config)])
+        let data = await axios.get(url_1,config)
         if(data.status==='rejected'){
           if(data.reason.response.status===450){
               localStorage.removeItem('token');
               window.location.reload()
           }
         }
-        setCategories(data.value.data.data)  
+
+        setServices(data.data.data)  
         //esconder el loader
         setLoader('none')
       }catch(error){
@@ -115,30 +109,35 @@ const Category = () => {
   }, [])
   
   const getData = async () =>{
-    let categoriesF = await axios.get(url_1,config)
-    setCategories(categoriesF.data.data)
+    let servicesF = await axios.get(url_1,config)
+    setServices(servicesF.data.data)
   }
+
 
   const saveData = async (info) => {
     try{
       setLoader('flex')
+      
       let data = null
       if(form.id===null){
         data = await axios.post(url_1,info,config)
-        toast.success('Category created')
+        toast.success('Product created')
       }else{
         data = await axios.put(`${url_1}${form.id}`,info,config)
-        toast.success('Category updated')
+        toast.success('Product updated')
+      }
+      if(data.status==='rejected'){
+        if(data.reason.response.status===450){
+          localStorage.removeItem('token');
+          window.location.reload()
+        }
       }
       handleReset()
+      
     }catch(error){
       if(error.response.status!==200){
         if(error.response.status===400){
-          if(error.response.data.message.includes('SequelizeUniqueConstraintError')){
-            toast.error('invalid Category name')
-          }else{
-            toast.error('Server error')
-          }
+          toast.error('Server error')
         }else if(error.response.status===403){
            toast.error('Validation error')
         }else if(error.response.status===404){
@@ -153,23 +152,29 @@ const Category = () => {
   const editData = (id) =>{
     setAction('Update')
     handleOpen()
-    let [category] = categories.filter(el => el.id === id)
-    setForm(category)
+    let [service] = services.filter(el => el.id === id)
+    setForm(service)
   }
 
   //borrar registro
   const setDataToDelete = (id) =>{
     handleOpenD()
-    let [category] = categories.filter(el => el.id === id)
-    setCategoryD(category)
+    let [service] = services.filter(el => el.id === id)
+    setServiceD(service)
 
   }
   
   const deleteData = async (id) => {
     try{
       setLoader('flex')
-      let data = await axios.delete(`${url_1}${categoryD.id}`,config)
-      toast.success('Room deleted')
+      let data = await axios.delete(`${url_1}${serviceD.id}`,config)
+      toast.success('Product deleted')
+      if(data.status==='rejected'){
+        if(data.reason.response.status===450){
+          localStorage.removeItem('token');
+          window.location.reload()
+        }
+      }
       handleReset()
     }catch(error){
       if(error.response.status!==200){
@@ -185,20 +190,13 @@ const Category = () => {
     }
   }
 
-  const [idCategory, setIdCategory] = useState(1)
-
-  const editImage = (id) =>{
-    setIdCategory(id)
-    handleOpenI()
-  }
-
   return (
     <>
       {/* header */}
       <ToastContainer autoClose={2000}/>
       <Loader display={loader}/>
       <div style={{padding:'5px'}}>
-        <span style={{fontSize:'20px'}}>Categories</span>
+        <span style={{fontSize:'20px'}}>Restaurant</span>
         <Fab color="primary" aria-label="add" size="small" onClick={()=>{handleOpen();setAction('Create');setForm(initialForm)}} style={{float:'right',marginBottom:'20px'}}>
           <AddIcon />
         </Fab>
@@ -210,75 +208,59 @@ const Category = () => {
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
-              <TableCell>Category</TableCell>
+              <TableCell>Product</TableCell>
               <TableCell>Price</TableCell>
-              <TableCell>Max people</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {categories.map((cg, index) => (
+            {services.map((s, index) => (
               <TableRow
-                key={cg.id}
+                key={s.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell component="th" scope="row">
-                  {cg.name}
+                 {s.name}
                 </TableCell>
                 
-                <TableCell>$&nbsp;{cg.price}</TableCell>
-                <TableCell>{cg.max}</TableCell>
-                <TableCell style={{maxWidth:'250px'}}>{cg.description}</TableCell>
-                <TableCell>
-                  <IconButton aria-label="edit" size="small" onClick={(e) => editData(cg.id)}>
+                <TableCell>$&nbsp;{s.price}</TableCell>
+                <TableCell>{s.description}</TableCell>
+                <TableCell style={{ margin: '5px' }}>
+                  <IconButton aria-label="edit" size="small" onClick={(e) => editData(s.id)}>
                     <EditIcon size="small" />
                   </IconButton>
-                  <IconButton aria-label="images" size="small" onClick={(e) => editImage(cg.id)}>
-                    <ImageSearchIcon size="small" />
-                  </IconButton>
-                  {/* <IconButton aria-label="delete" size="small" onClick={(e) => setDataToDelete(cg.id)}>
+                  <IconButton aria-label="delete" size="small" onClick={(e) => setDataToDelete(s.id)}>
                     <DeleteIcon />
-                  </IconButton> */}
+                  </IconButton>
                 </TableCell>
               </TableRow>
-            ))}
+            ))} 
           </TableBody>
         </Table>
       </TableContainer>
       
       {/* modal */}
-      <ModalCategory
+      <ModalRestaurant
         action={action}
         handleForm={handleForm}
         handleClose={handleClose}
         setLoader={setLoader}
         saveData={saveData}
         open={open}
-        categories={categories}
         initialForm={form}
       />
 
-      <ModalImage
-        handleClose={handleCloseI}
-        open={openI}
-        idCategory={idCategory}
-        url_2={url_2}
-        config={config}
-        setLoader={setLoader}
-      />
-
-       {/* <Alert_Dialog
+       <Alert_Dialog
         openD={openD}
         handleCloseD={handleCloseD}
-        name={`${categoryD.name}`}
+        name={`${serviceD.name}`}
         deleteData={deleteData}
-        description={'¿Are you sure you want to delete '}
-      /> */}
+        description={'¿Are you sure you want to delete the service '}
+      />
     </>
-
   )
 }
 
-export default Category
+export default Restaurant

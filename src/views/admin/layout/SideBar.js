@@ -29,7 +29,7 @@ const SideBar = ({role}) => {
                 
             </ol>
                 {links.catalogues.length===0
-                ? '' :<div style={{textAling:"center",width:'100%',padding:"10px 20px"}}>Catalogues</div>}
+                ? '' :<div style={{textAling:"center",width:'100%',padding:"20px 20px"}}>Catalogues</div>}
             <ol>
                 {links.catalogues.map((el,index)=>(
                     <li key={'l1'+index}> 

@@ -83,10 +83,11 @@
   width: 100%;
   padding: 10px;
   color: white;
-  background-color: red;
+  background-color: #ffc107;
   text-align: center;
   opacity: 0.8;
   border-radius: 5px;
+  display: flex;
 }
 
 #tsparticles{

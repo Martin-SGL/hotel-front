@@ -225,7 +225,7 @@ const Service = () => {
                  {s.name}
                 </TableCell>
                 
-                <TableCell>{s.price}</TableCell>
+                <TableCell>$&nbsp;{s.price}</TableCell>
                 <TableCell>{s.description}</TableCell>
                 <TableCell style={{ margin: '5px' }}>
                   <IconButton aria-label="edit" size="small" onClick={(e) => editData(s.id)}>
