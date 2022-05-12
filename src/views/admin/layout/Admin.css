@@ -116,3 +116,7 @@ nav.sidemenu div ol li{
     margin-left: 15px;
 }
 
+tr:hover{
+    background-color:#cecece;
+  }
+

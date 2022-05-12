@@ -32,12 +32,6 @@ export const receptionist = {
                 route:"/admin/invoicing",
                 icon: <AttachMoneyIcon/>
             },
-            {
-                id:4,
-                nameRoute:"Anomalies",
-                route: "/admin/anomalies",
-                icon: <ThumbDownAltIcon/>
-            }
         ],
     catalogues:[]
 }
@@ -63,12 +57,6 @@ export const manager = {
                 route:"/admin/invoicing",
                 icon: <AttachMoneyIcon/>
             },
-            {
-                id:4,
-                nameRoute:"Anomalies",
-                route: "/admin/anomalies",
-                icon: <ThumbDownAltIcon/>
-            }
         ],
     catalogues: 
     [
@@ -84,12 +72,12 @@ export const manager = {
             route:"/admin/services-c",
             icon: <RoomServiceIcon/>
         },
-        {
-            id: 22,
-            nameRoute:"Restaurant",
-            route:"/admin/restaurant-c",
-            icon: <MenuBookIcon/>
-        },
+        // {
+        //     id: 22,
+        //     nameRoute:"Restaurant",
+        //     route:"/admin/restaurant-c",
+        //     icon: <MenuBookIcon/>
+        // },
         {
             id: 23,
             nameRoute:"Rooms",

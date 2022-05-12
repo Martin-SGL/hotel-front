@@ -198,10 +198,10 @@ const Category = () => {
       <ToastContainer autoClose={2000}/>
       <Loader display={loader}/>
       <div style={{padding:'5px'}}>
-        <span style={{fontSize:'20px'}}>Categories</span>
-        <Fab color="primary" aria-label="add" size="small" onClick={()=>{handleOpen();setAction('Create');setForm(initialForm)}} style={{float:'right',marginBottom:'20px'}}>
+        <div style={{fontSize:'20px',marginBottom:'20px'}}>Categories</div>
+        {/* <Fab color="primary" aria-label="add" size="small" onClick={()=>{handleOpen();setAction('Create');setForm(initialForm)}} style={{float:'right',marginBottom:'20px'}}>
           <AddIcon />
-        </Fab>
+        </Fab> */}
       </div>
 
       {/* table */}

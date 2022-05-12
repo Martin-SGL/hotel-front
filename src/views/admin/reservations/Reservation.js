@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
+import Box from '@material-ui/core/Box'
 import Fab from '@material-ui/core/Fab'
 
 
@@ -32,12 +33,18 @@ import axios from 'axios'
 
 //url base
 import url_base from '../../../config/env'
-import { getDefaultNormalizer } from '@testing-library/react'
 
 //Modal
 import ModalReservation from './ModalReservation'
+import ModalCharges from './ModalCharges'
 import ModalCheckIn from './ModalCheckIn'
+import ModalServices from './ModalServices'
+import ModalChanges from './ModalChanges'
+import ModalCheckOut from './ModalCheckOut'
 import Alert_Dialog from '../../../components/Alert_Dialog'
+import { ContactSupportOutlined } from '@material-ui/icons'
+
+import formatDate from '../../../helpers/formatDate'
 
 let initialForm = {
   name:'',
@@ -48,10 +55,12 @@ let initialForm = {
   id:null
 }
 
+
+
 //informacion de urls
 const url_1 = `${url_base}reservations/`
-const url_2 = `${url_base}rooms/`
-// const url_2 = `${url_base}roles/`
+const url_2 = `${url_base}services/`
+
 
 let config = {}
 
@@ -65,22 +74,47 @@ const Reservation = () => {
     })
   }
   //form check in
-  const [formCheckIn,setFormCheckIn] = useState([])
-  const handleFormCheckIn = async (e)=>{
-    setForm([
-      ...formCheckIn,e.target.value
-    ])
+  const [reservations,setReservations] = useState([])
+  const [checkInReservation,setCheckInReservation] = useState([])
+  const [formServices, setFormServices] = useState({})
+  const [servicesToReservation, setServicesToReservation] = useState(null)
+  const [totalServices, setTotalServices] = useState(0)
+  const [chargesToReservation,setChargesToReservation] = useState(null)
+  const [changesToRoom,setChangesToRoom] = useState({room:1,reservation:1})
+  const [checkOut,setCheckOut] = useState(1)
+
+  let totalC = 0
+  let totalF = [] 
+
+  const handleFormServices = (e) =>{
+    let price = e.target.id.split('-')[0]
+    let id ='price-'+e.target.id.split('-')[1]
+    setFormServices(
+      {...formServices,[e.target.name]:e.target.value,[id]:price}
+      )
   }
 
-  const saveCheckIn = async () => {
-    console.log(formCheckIn)
-  } 
-  const [reservations,setReservations] = useState([])
-  const [rooms,setRooms] = useState([])
-  // const [roles,setRoles] = useState([])
+  useEffect(() => {
+    console.log(formServices)
+    let amount = 0
+    let price = 0
+    let i = 0
+    let total_get = 0
+    for (const key in formServices) {
+      if(i===0){
+        price = formServices[key]
+        i++
+      }else{
+        amount = formServices[key]
+        total_get = total_get + (amount*price)
+        i=0
+      } 
+    }
+    setTotalServices(total_get)
+  }, [formServices])
 
   //modal state vars
-  //add reservation
+  //reservation
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -88,11 +122,24 @@ const Reservation = () => {
   const [openCheckIn, setOpenCheckIn] = useState(false)
   const handleOpenCheckIn = () => setOpenCheckIn(true)
   const handleCloseCheckIn = () => setOpenCheckIn(false)
-  //deleted
-  const [openD, setOpenD] = useState(false)
-  const [employeeD, setEmployeeD] = useState(initialForm)
-  const handleOpenD = () => setOpenD(true)
-  const handleCloseD = () => setOpenD(false)
+  //services
+  const [openS, setOpenS] = useState(false)
+  const handleOpenS = () => setOpenS(true)
+  const handleCloseS = () => setOpenS(false)
+  //charges
+  const [openChar, setOpenChar] = useState(false)
+  const handleOpenChar = () => setOpenChar(true)
+  const handleCloseChar = () => setOpenChar(false)
+  //changes
+  const [openChag, setOpenChag] = useState(false)
+  const handleOpenChag = () => setOpenChag(true)
+  const handleCloseChag = () => setOpenChag(false)
+  //changes
+  const [openCheckOut, setOpenCheckOut] = useState(false)
+  const handleOpenCheckOut = () => setOpenCheckOut(true)
+  const handleCloseCheckOut = () => setOpenCheckOut(false)
+
+  
   //loading state
   const [loader, setLoader] = useState('none')
   //action state
@@ -102,12 +149,20 @@ const Reservation = () => {
   const notify = (message) => toast.success(message)
   const notifyE = (message) => toast.error(message)
 
-  
-
   //resetear parametros
   const handleReset = ()=>{
     handleClose()
-    handleCloseD()
+    handleCloseCheckIn()
+    handleCloseS()
+    handleCloseChar()
+    handleCloseChag()
+    handleCloseCheckOut()
+    setForm(initialForm) //formulario para modificar
+    setFormServices({}) // formulario de services
+    setTotalServices(0) //total de services a 0
+    setChargesToReservation(null)
+    setChangesToRoom(null)
+    setCheckOut(1)
     setAction('Create')
     setLoader('none')
     getData()
@@ -120,7 +175,7 @@ const Reservation = () => {
         config.headers =  { Authorization: `Bearer ${localStorage.getItem('token')}` }
         //mostar lodaer
         setLoader('flex')
-        let [data,dataRoom] = await Promise.allSettled([axios.get(url_1,config), axios.get(url_2,config)])
+        let [data] = await Promise.allSettled([axios.get(url_1,config)])
         if(data.status==='rejected'){
           if(data.reason.response.status===450){
               localStorage.removeItem('token');
@@ -128,7 +183,6 @@ const Reservation = () => {
           }
         }
         setReservations(data.value.data.data)
-        setRooms(dataRoom.value.data.data)
         //esconder el loader
         setLoader('none')
       }catch(error){
@@ -150,7 +204,7 @@ const Reservation = () => {
     try{
       setLoader('flex')
       let data = await axios.post(url_1,info,config)
-      toast.success('Employee created')
+      toast.success('Reservation created')
       if(data.status==='rejected'){
         if(data.reason.response.status===450){
           localStorage.removeItem('token');
@@ -172,40 +226,97 @@ const Reservation = () => {
     }
   }
 
-  //abrir el modal 
-  const editData = (id) =>{
-    setAction('Update')
-    handleOpen()
-    let [reservation] = reservations.filter(el => el.id === id)
-    setForm(reservation)
+  const setCheckIn = async (id,date) =>{
+    let year = date.slice(0,4),
+    month  = date.slice(5,7),
+    day = date.slice(8,10);
+    
+    let formatDate_2 =  year+'/'+month+'/'+day
+    let initial_date = new Date(formatDate_2)
+    let today = new Date()
+
+    if(initial_date > today){
+      toast.error("Initial date is after today, you can't  check in")
+    }else{
+      setCheckInReservation(id)
+      handleOpenCheckIn()
+    }
   }
 
-  //borrar registro
-  const setDataToDelete = (id) =>{
-    handleOpenD()
-    let [reservation] = reservations.filter(el => el.id === id)
-    setEmployeeD(reservation)
-
+  const saveCheckIn = async () =>{
+    try {
+      setLoader('flex')
+      let data = await axios.get(`${url_1}checkin/${checkInReservation}`,config)
+      toast.success('Check in done')
+      if(data.status==='rejected'){
+        if(data.reason.response.status===450){
+          localStorage.removeItem('token');
+          window.location.reload()
+        }
+      }
+      handleReset()
+    } catch (error) {
+      if(error.response.status!==200){
+        if(error.response.status===400){
+          toast.error('Server error')
+        }else if(error.response.status===403){
+           toast.error('Validation error')
+        }else if(error.response.status===404){
+          toast.error('Not found register or url')
+       }
+      }
+      handleReset()
+    }
   }
-  
-  const deleteData = async (id) => {
-    // try{
-    //   setLoader('flex')
-    //   let reservationsF = await axios.delete(`${url_1}${employeeD.id}`,config)
-    //   toast.success('Employee deleted')
-    //   handleReset()
-    // }catch(error){
-    //   if(error.response.status!==200){
-    //     if(error.response.status===400){
-    //       toast.error('Server error')
-    //     }else if(error.response.status===403){
-    //        toast.error('Validation error')
-    //     }else if(error.response.status===404){
-    //       toast.error('Not found register or url')
-    //    }
-    // //   }
-    //   handleReset()
-    // }
+
+  const setServices = async (id) =>{
+    setServicesToReservation(id)
+    handleOpenS()
+  }
+
+  const saveDataServices = async () =>{
+    try{
+      //mostar lodaer
+      setLoader('flex')
+      let res = await axios.post(`${url_1}services/${servicesToReservation}`,formServices,config)
+      if(res.status==='rejected'){
+        if(res.reason.response.status===450){
+            localStorage.removeItem('token');
+            window.location.reload()
+        }
+      }
+      toast.success('Services registered')
+      //esconder el loader
+      handleReset()
+    }catch(error){
+      if(error.response.status!==200){
+        if(error.response.status===400){
+          toast.error('Server error')
+        }else if(error.response.status===403){
+           toast.error('Validation error')
+        }else if(error.response.status===404){
+          toast.error('Not found register or url')
+       }
+      }
+      handleReset()
+    }
+  }
+  const setDataChar = async (id) =>{
+    setChargesToReservation(id)
+    handleOpenChar()
+  }
+
+  const setDataChang = async (room,reservation)=>{
+    setChangesToRoom(
+      {room,reservation}
+    )
+    handleOpenChag()
+  }
+
+  const setCheckOutToReservation = (id) =>{
+    setCheckOut(id)
+    handleOpenCheckOut()
+
   }
 
   return (
@@ -213,96 +324,149 @@ const Reservation = () => {
       {/* header */}
       <ToastContainer autoClose={2000}/>
       <Loader display={loader}/>
-      <div style={{padding:'5px'}}>
+      <div style={{marginBottom:'10px'}}>
         <span style={{fontSize:'20px'}}>Reservations</span>
-        <Fab color="primary" aria-label="add" size="small" onClick={()=>{handleOpen();setAction('Create');setForm(initialForm)}} style={{float:'right',marginBottom:'20px'}}>
-          <AddIcon />
-        </Fab>
+        {/* <Fab color="primary" aria-label="add" size="small" onClick={()=>{handleOpen();setAction('Create');setForm(initialForm)}} style={{float:'right',marginBottom:'20px'}}>
+          <AddIcon /> 
+        </Fab>*/}
       </div>
 
       {/* table */}
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>Client</TableCell>
-              <TableCell>Reservation</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {!!reservations && reservations.map((rs, index) => (
-              <TableRow
-                key={rs.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell>{index + 1}</TableCell>
-                <TableCell component="th" scope="row">
-                  <li style={{textTransform:'capitalize'}}>{rs.Client.name} {rs.Client.lastname}</li>
-                  <li>{rs.Client.email}</li>
-                  <li>{rs.Client.phone}</li>
-                </TableCell>
-                <TableCell>
-                  <li>No: {rs.no_res}</li>
-                  <li>Inital: {rs.init_date.slice(0, 10)}</li>
-                  <li>Final: {rs.final_date.slice(0, 10)}</li>
-                  <li>Status: {rs.status}</li>
-                </TableCell>
-                <TableCell style={{ margin: '5px' }}>
-                  <IconButton onClick={(e)=>saveCheckIn(rs.id)} title="Check in" aria-label="edit" size="small" >
-                    <CheckCircleIcon size="small" />
-                  </IconButton>
-                  <IconButton title="services" aria-label="edit" size="small" onClick={(e) => editData(rs.id)}>
-                    <RoomServiceIcon size="small" />
-                  </IconButton>
-                  <IconButton title="restaurant" aria-label="edit" size="small" onClick={(e) => editData(rs.id)}>
-                    <MenuBookIcon size="small" />
-                  </IconButton>
-                  <IconButton title="charges" aria-label="edit" size="small" onClick={(e) => editData(rs.id)}>
-                    <MoneyOffIcon size="small" />
-                  </IconButton>
-                  <IconButton title="changes" aria-label="edit" size="small" onClick={(e) => editData(rs.id)}>
-                    <TrendingFlatIcon size="small" />
-                  </IconButton>
-                  <IconButton title="check out" aria-label="edit" size="small" onClick={(e) => editData(rs.id)}>
-                    <CheckCircleIcon size="small" />
-                  </IconButton>
-                </TableCell>
+      <Box style={{width:'100%'}}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>#</TableCell>
+                <TableCell>Client</TableCell>
+                <TableCell>Reservation</TableCell>
+                <TableCell>Rooms</TableCell>
+                <TableCell style={{textAlign:"center"}}>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {reservations!==null && reservations.map((rs, index) => (
+                <TableRow
+                  key={rs.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell component="th" scope="row">
+                    <li style={{textTransform:'capitalize'}}>{rs.Client.name} {rs.Client.lastname}</li>
+                    <li>{rs.Client.email}</li>
+                    <li>{rs.Client.phone}</li>
+                  </TableCell>
+                  <TableCell>
+                    <li>No: <b>{rs.no_res}</b></li>
+                    <li>Inital: <b>{rs.init_date.slice(0, 10)}</b></li>
+                    <li>Final: <b>{rs.final_date.slice(0, 10)}</b></li>
+                    {rs.Categories.map( cat => (
+                      <li key={cat.id} style={{textTransform:'capitalize'}}>{cat.name}: <b>{cat.ReservationCategories.amount}</b></li>
+                    ))}
+                    <li>Total $: <b>{rs.Payments[0].total}</b></li>
+                    <li>Status: <b>{rs.status}</b></li>
+                  </TableCell>
+                  <TableCell>
+                    {rs.status !== 'reservated'
+                        ?
+                        rs.Rooms.map(r =>(
+                          <li key={r.id}>
+                            {r.name}
+                              {rs.status === 'occupated'  
+                              && <IconButton onClick={e=>{setDataChang(r.id,rs.id)}} title="changes" aria-label="edit" size="small" style={{color:'green'}}>
+                                  <TrendingFlatIcon size="small" />
+                                </IconButton>
+                              } 
+                          </li>
+                        ))
+                        :
+                        "Check In First"
+                    }
+                  </TableCell>
+                  <TableCell style={{ margin: '5px',textAlign:"center" }}>
+                    {rs.status === 'reservated' 
+                      && <IconButton onClick={(e)=>setCheckIn(rs.id,rs.init_date)} title="Check in" aria-label="edit" size="small" style={{color:'green'}}>
+                          <CheckCircleIcon size="small" />
+                        </IconButton>
+                    }
+                  {rs.status === 'occupated'  
+                    &&<IconButton onClick={e=>{setServices(rs.id);setFormServices({})}} title="services" aria-label="edit" size="small" style={{color:'green'}}>
+                        <RoomServiceIcon size="small" />
+                      </IconButton>
+                    }
+                    {rs.status === 'occupated'  
+                    && <IconButton onClick={e=>{setDataChar(rs.id)}} title="charges" aria-label="edit" size="small" style={{color:'green'}}>
+                        <MoneyOffIcon size="small" />
+                      </IconButton>
+                    }
+                    {rs.status === 'occupated'  
+                    &&  <IconButton onClick={e=>{setCheckOutToReservation(rs.id)}}title="check out" aria-label="edit" size="small"  style={{color:'red'}}>
+                          <CheckCircleIcon size="small" />
+                        </IconButton>
+                    }
+                  
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
       
-      {/* modal */}
-      {/* <ModalReservation
-        action={action}
-        handleForm={handleForm}
-        handleClose={handleClose}
-        setLoader={setLoader}
-        saveData={saveData}
-        open={open}
-        initialForm={form}
-      /> */}
-{/* 
+      
+      {/* Modal check in*/}
       <ModalCheckIn
-        handleForm={handleFormCheckIn}
         handleClose={handleCloseCheckIn}
-        setLoader={setLoader}
-        saveData={saveCheckIn}
+        saveCheckIn={saveCheckIn}
         open={openCheckIn}
-        initialForm={formCheckIn}
-        rooms={rooms}
-      /> */}
+      />
+      {/* modal servies */}
+      <ModalServices
+        handleFormServices={handleFormServices}
+        handleClose={handleCloseS}
+        setLoader={setLoader}
+        saveDataServices={saveDataServices}
+        open={openS}
+        totalServices={totalServices}
+        url_1={url_1}
+      />
+      {/* Modal Charges */}
+        <ModalCharges
+        handleClose={handleCloseChar}
+        open={openChar}
+        chargesToReservation={chargesToReservation}
+        config={config}
+        setLoader={setLoader}
+        handleReset={handleReset}
+      />
+      {/* Modal Changes */}
+      <ModalChanges
+        handleClose={handleCloseChag}
+        open={openChag}
+        changesToRoom={changesToRoom}
+        config={config}
+        setLoader={setLoader}
+        handleReset={handleReset}
+      />
 
-       <Alert_Dialog
+      {/* Modal Checkout */}
+      <ModalCheckOut
+        handleClose={handleCloseCheckOut}
+        open={openCheckOut}
+        checkOut={checkOut}
+        config={config}
+        setLoader={setLoader}
+        handleReset={handleReset}
+        reservations={reservations}
+      />
+
+
+       {/* <Alert_Dialog
         openD={openD}
         handleCloseD={handleCloseD}
         name={`${employeeD.name} ${employeeD.lastname}`}
-        deleteData={deleteData}
         description={'¿Are you sure you want to delete '}
-      />
+      /> */}
     </>
 
   )

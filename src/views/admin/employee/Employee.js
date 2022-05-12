@@ -141,7 +141,11 @@ const Employee = () => {
     }catch(error){
       if(error.response.status!==200){
         if(error.response.status===400){
-          toast.error('Server error')
+          if(error.response.data.message.includes('SequelizeUniqueConstraintError')){
+            toast.error('invalid employee email')
+          }else{
+            toast.error('Server error')
+          }
         }else if(error.response.status===403){
            toast.error('Validation error')
         }else if(error.response.status===404){

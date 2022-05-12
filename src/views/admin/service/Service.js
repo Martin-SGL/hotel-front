@@ -88,7 +88,7 @@ const Service = () => {
         config.headers =  { Authorization: `Bearer ${localStorage.getItem('token')}` }
         //mostar lodaer
         setLoader('flex')
-        let data = await axios.get(url_1,config)
+        let [data] = await Promise.allSettled([axios.get(url_1,config)])
         if(data.status==='rejected'){
           if(data.reason.response.status===450){
               localStorage.removeItem('token');
@@ -96,7 +96,7 @@ const Service = () => {
           }
         }
 
-        setServices(data.data.data)  
+        setServices(data.value.data.data)  
         //esconder el loader
         setLoader('none')
       }catch(error){
@@ -179,7 +179,11 @@ const Service = () => {
     }catch(error){
       if(error.response.status!==200){
         if(error.response.status===400){
-          toast.error('Server error')
+          if(error.response.data.message.includes('SequelizeUniqueConstraintError')){
+            toast.error('invalid service name')
+          }else{
+            toast.error('Server error')
+          }
         }else if(error.response.status===403){
            toast.error('Validation error')
         }else if(error.response.status===404){

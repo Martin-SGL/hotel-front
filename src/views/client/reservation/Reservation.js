@@ -31,6 +31,8 @@ import Loader from "../../../assets/loader/Loader";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import formatDate from '../../../helpers/formatDate'
+
 const Reservation = () => {
 
   const style = {
@@ -123,12 +125,9 @@ const formik = useFormik({
     onSubmit: (values,{resetForm}) =>{
         // saveData(values)
         let valuesForm = values
-        let init = new Date(values.init_date).getTime()
-        let final = new Date(values.final_date).getTime()
-        let i_date = new Date(values.init_date)
-        let f_date = new Date(values.final_date)
-        i_date.setDate(i_date.getDate()+1)
-        f_date.setDate(f_date.getDate()+1)
+        let init = formatDate(values.init_date)
+        let final = formatDate(values.final_date)
+
         let days = (final - init)/(1000*60*60*24)
 
         let price_simple = categories[0].price
@@ -141,22 +140,20 @@ const formik = useFormik({
 
         let exp_date = new Date(values.exp_date)
 
-        if(i_date < new Date()) {
+        if(init < new Date()) {
           setError('Invalid initial date')
           return toast.error(error)
-
-
         }
-        if(f_date < new Date()){
+        if(final < new Date()){
           setError('Invalid final date')
           return toast.error(error)
         }
-        if(i_date.getDate() > f_date.getDate()) {
+        if(init.getDate() > final.getDate()) {
           setError('Initial date must be first')
           return toast.error(error)
         } 
 
-        if(i_date.getDate() === f_date.getDate()) {
+        if(init.getDate() === final.getDate()) {
           setError('Initial date and final date must be different')
           return toast.error(error)
         } 
@@ -488,13 +485,9 @@ const formik = useFormik({
               <CancelIcon />
             </Fab>
           </Grid>
-          
         </Box>
       </Modal>
     </div>
-
-
-
   )
 }
 

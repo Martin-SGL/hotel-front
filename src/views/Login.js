@@ -6,8 +6,7 @@ import img from '../assets/img/hotel.png';
 import ParticlesLoign from '../components/ParticlesLogin';
 import { ReactSession } from 'react-client-session';
 import url_base from '../config/env'
-
-
+import { Link } from 'react-router-dom'
 
 const Login = (props) => {
     const [res, setRes] = useState()
@@ -44,7 +43,9 @@ const Login = (props) => {
         <ParticlesLoign/>
         <Loader display={dispLoader}/>
         <div className='container-login'>
+            <Link to={'/'} style={{color:'black',textDecoration:'none'}}>
             <img src={img} alt="Imagen de hotel"/>
+            </Link>
             <div className='login-header'>
                 <b>Posada Real</b> Hotel
             </div>
