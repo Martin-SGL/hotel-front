@@ -38,17 +38,23 @@ export default function Dashboard() {
         //mostar lodaer
         setLoader('flex')
         let [data] = await Promise.allSettled([axios.get(url_1,config)])
+        let simple_c = 0
+        let junior_c = 0
+        let suite_c = 0
         data.value.data.data.forEach(el=>{
           el.Categories.forEach(e=>{
             if(e.name==='simple'){
-              setSimple(simple + e.ReservationCategories.amount)
+              simple_c = simple_c + e.ReservationCategories.amount
             }else if(e.name==='junior'){
-              setJunior(junior + e.ReservationCategories.amount)
+              junior_c = junior_c + e.ReservationCategories.amount
             }else{
-              setSuite(suite + e.ReservationCategories.amount)
+              suite_c = suite_c + e.ReservationCategories.amount
             }
           }) 
         })
+        setSimple(simple_c)
+        setJunior(junior_c)
+        setSuite(suite_c)
         
         //esconder el loader
         setLoader('none')

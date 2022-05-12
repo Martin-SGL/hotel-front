@@ -8,7 +8,7 @@ const Client = (props) => {
   const [path, setPath] = useState(window.location.pathname)
 
   useEffect(() => {
-    
+    setPath(window.location.pathname)
   }, [path])
   
   
