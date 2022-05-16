@@ -79,7 +79,7 @@ export default function Dashboard() {
   ];
 
   const options = {
-    title: "Today's Reservations",
+    title: "Reservations",
     chartArea: { width: "50%" },
     hAxis: {
       title: "Total rooms per category",
